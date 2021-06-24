@@ -12,17 +12,16 @@ book.prototype.clickButton = function (e) {
     *   - this = button
     *   - card is set below
     * */
-    const card = e.target.parentElement.parentElement;
-    const confMessage = `Are you sure you want to remove ${card.book.title} from your "have read" list?`
 
-    if (card.book.isRead /*&& confirm(confMessage)*/) {
-        card.book.isRead = false;
-        card.classList.remove("read");
-        this.textContent = "I have not read";
+    const book = this.parentElement.parentElement.book;
+    const confMessage = `Are you sure you want to remove ${book.title} from your "have read" list?`
+
+    if (book.isRead /*&& confirm(confMessage)*/) {
+        book.isRead = false;
+        book.card.classList.remove("read");
     } else {
-        card.book.isRead = true;
-        card.classList.add("read");
-        this.textContent = "I have read";
+        book.isRead = true;
+        book.card.classList.add("read");
     }
 }
 book.prototype.info = function() {
@@ -45,7 +44,14 @@ book.prototype.generateCard = function () {
             header.appendChild(title);
         const btnRead = document.createElement('button');
             btnRead.classList = "read-button";
-            btnRead.textContent = "I have not read";
+                const check = document.createElement('div');
+                    check.classList = "read-check";
+                    check.textContent = "\u2713";
+                    btnRead.appendChild(check);
+                const readLabel = document.createElement('div');
+                    readLabel.classList = "read-label";
+                    readLabel.textContent = "Read";
+                    btnRead.appendChild(readLabel);
             btnRead.addEventListener('click', this.clickButton);
             header.appendChild(btnRead);
 
