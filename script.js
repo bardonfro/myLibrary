@@ -10,8 +10,8 @@ book.prototype.clickButton = function (e) {
     /* In this function:
     *   - e = click event
     *   - this = button
-    *   - card is set below
-    * */
+    *   - book is set below
+    */
 
     const book = this.parentElement.parentElement.book;
     const confMessage = `Are you sure you want to remove ${book.title} from your "have read" list?`
@@ -74,6 +74,25 @@ book.prototype.generateCard = function () {
     this.card.appendChild(author);
     this.card.appendChild(pages);
     document.body.appendChild(this.card);
+}
+
+const form = document.querySelector('#new-book');
+
+
+const btnNewBook = document.querySelector('#form-toggle');
+btnNewBook.addEventListener('click', clickBtnNew);
+btnNewBook.status = "open";
+
+function clickBtnNew() {
+    if (form.classList.contains("hidden")) {
+        form.classList.remove('hidden');
+        btnNewBook.classList.remove('open');
+        btnNewBook.classList.add('close');
+    } else {
+        form.classList.add('hidden');
+        btnNewBook.classList.add('open');
+        btnNewBook.classList.remove('close');
+    }
 }
 
 const lordoftherings = new book ("The Lord Of The Rings", "J.R.R. Tolkein", "495", false);
