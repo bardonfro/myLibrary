@@ -1,5 +1,5 @@
 # myLibrary
-This is a simple learning project created for (https://www.theodinproject.com/paths/full-stack-javascript/courses/javascript/lessons/library)[The Odin Project].
+This is a simple learning project created for [The Odin Project](https://www.theodinproject.com/paths/full-stack-javascript/courses/javascript/lessons/library).
 
 
 ## Learning objective
