@@ -16,22 +16,34 @@ function book(title, author, pages, read) {
     this.isRead = read;
     arrLibrary.push(this);
 }
-book.prototype.clickButton = function (e) {
+
+book.prototype.clickDel = function () {
+    const card = this.parentElement.parentElement
+    const book = card.book;
+    const confMessage = `Are you sure you want to delete ${book.title} from your library?`
+
+    arrLibrary = arrLibrary.filter(bk => !(bk === book));
+    document.body.removeChild(card);
+
+}
+
+book.prototype.clickRead = function (e) {
     /* In this function:
     *   - e = click event
     *   - this = button
     *   - book is set below
     */
 
-    const book = this.parentElement.parentElement.book;
+    const card = this.parentElement.parentElement
+    const book = card.book;
     const confMessage = `Are you sure you want to remove ${book.title} from your "have read" list?`
 
     if (book.isRead /*&& confirm(confMessage)*/) {
         book.isRead = false;
-        book.card.classList.remove("read");
+        card.classList.remove("read");
     } else {
         book.isRead = true;
-        book.card.classList.add("read");
+        card.classList.add("read");
     }
 }
 book.prototype.info = function() {
@@ -41,12 +53,12 @@ book.prototype.info = function() {
 }
 book.prototype.generateCard = function () {
     //Creating the card div
-    this.card = document.createElement('div');
-    this.card.classList = "book";
+    const card = document.createElement('div');
+    card.classList = "book";
     if (this.isRead) {
-        this.card.classList.add("read");
+        card.classList.add("read");
     }
-    this.card.book = this;
+    card.book = this;
 
     //Creating the contents
     const header = document.createElement('div');
@@ -55,17 +67,31 @@ book.prototype.generateCard = function () {
             title.classList = "title"
             title.textContent = this.title;
             header.appendChild(title);
-        const btnRead = document.createElement('button');
-            btnRead.classList = "read-button";
+        const btnDel = document.createElement('div');
+            btnDel.classList = "button del-button";
+                const x = document.createElement('div');
+                    x.classList = "symbol";
+                    x.textContent = "X";
+                    btnDel.appendChild(x);
+                const delLabel = document.createElement('div');
+                    delLabel.classList = "label";
+                    delLabel.textContent = "Del";
+                    btnDel.appendChild(delLabel);
+            btnDel.addEventListener('click', this.clickDel);
+            header.appendChild(btnDel);
+     
+
+        const btnRead = document.createElement('div');
+            btnRead.classList = "button read-button";
                 const check = document.createElement('div');
-                    check.classList = "read-check";
+                    check.classList = "symbol";
                     check.textContent = "\u2713";
                     btnRead.appendChild(check);
                 const readLabel = document.createElement('div');
-                    readLabel.classList = "read-label";
+                    readLabel.classList = "label";
                     readLabel.textContent = "Read";
                     btnRead.appendChild(readLabel);
-            btnRead.addEventListener('click', this.clickButton);
+            btnRead.addEventListener('click', this.clickRead);
             header.appendChild(btnRead);
 
     const author = document.createElement('div');
@@ -83,10 +109,10 @@ book.prototype.generateCard = function () {
         pages.classList = "pages";
         pages.textContent = this.pages + " pg.";
     //Filling the card and placing it in the DOM
-    this.card.appendChild(header);
-    this.card.appendChild(author);
-    this.card.appendChild(pages);
-    document.body.appendChild(this.card);
+    card.appendChild(header);
+    card.appendChild(author);
+    card.appendChild(pages);
+    document.body.appendChild(card);
 }
 
 const form = document.querySelector('#new-book');
@@ -123,6 +149,7 @@ function formSubmit (e) {
     console.log(isRead.value);
     const newBook = new book (title.value, author.value, pages.value, isRead.checked);
     newBook.generateCard();
+    clickBtnNew();
 }
 
 const lordoftherings = new book ("The Lord Of The Rings", "J.R.R. Tolkein", "495", false);

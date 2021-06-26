@@ -69,23 +69,43 @@ div.book .title {
     margin: .5rem;
     display: flex;
     align-items: center;
+    flex-grow: 1;
 }
 
-div.book button {
-    border:none;
-    background: none;
+div.book .button {
+    width: 3em;
     border-left: 2px solid #A288A6;
     color: #A288A6;
+    padding: .2em;
+    text-align: center;
+    flex-shrink: 0;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
 }
 
-div.book button .read-check {
-    font-size: 1.7em;
-}
-
-div.book.read button {
+div.book.read .button {
     color: #F1E3E4;
     opacity: 1;
     border-left-color: #F1E3E4;
+}
+
+div.book .button symbol {
+    font-size: 1.5em;
+}
+
+div.book .del-button .symbol {
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+div.book .read-button .symbol {
+    visibility: hidden;
+}
+
+div.book.read .read-button .symbol {
+    visibility: visible;
 }
 
 div.book .author,
