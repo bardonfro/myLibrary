@@ -118,6 +118,11 @@ div.book .author .by {
     font-size: .8em;
 }
 
+#empty-prompt {
+    font-size: 1.3em;
+    padding: 2em;
+    text-align: center;
+}
 /* Form */
 
 #form-toggle {

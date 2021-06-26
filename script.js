@@ -1,11 +1,18 @@
 'use strict'
 
 /* To-do
-* - Local storage option, then allow form submit to reset and use displayLibrary()
-* - Update footer links
 * - Validate form input
-*
 */
+
+const wrapper = document.querySelector('#wrapper');
+const form = document.querySelector('#new-book');
+const btnNewBook = document.querySelector('#form-toggle');
+btnNewBook.addEventListener('click', clickBtnNew);
+const btnCloseForm = document.querySelector('#new-book .button-close');
+btnCloseForm.addEventListener('click', clickBtnNew);
+
+btnNewBook.status = "open";
+
 
 let myLibrary = {
     shelf: [],
@@ -27,10 +34,18 @@ let myLibrary = {
         this.shelf.forEach(function (bk) {
             bk.generateCard();
         });
+
+        const emptyPrompt = document.querySelector('#empty-prompt');
+        if (this.shelf.length > 0) {
+            emptyPrompt.classList.add('hidden');
+        } else {
+            emptyPrompt.classList.remove('hidden');
+        }
     },
 
     load: function () {
         if (localStorage.libraryShelf) {
+            this.shelf = [];
             const input = JSON.parse(localStorage.libraryShelf);
             input.forEach(function (bk) {
                 const newbook = new book (bk.title, bk.author, bk.pages, bk.isRead);
@@ -50,8 +65,8 @@ let myLibrary = {
     sort: function () {
         this.shelf.sort(function (a,b) {
             if (a.title < b.title) {
-                return true;
-            } else {return false;}
+                return -1;
+            } else {return 1;}
         })
         return this.shelf;
     },
@@ -72,8 +87,10 @@ book.prototype.clickDel = function () {
     const book = card.book;
     const confMessage = `Are you sure you want to delete ${book.title} from your library?`
 
-    myLibrary.removeBook(book);
-    document.body.removeChild(card);
+    if(confirm(confMessage)) {
+        myLibrary.removeBook(book);
+        wrapper.removeChild(card);
+    }
 
 }
 
@@ -95,6 +112,7 @@ book.prototype.clickRead = function (e) {
         book.isRead = true;
         card.classList.add("read");
     }
+    myLibrary.save();
 }
 book.prototype.info = function() {
     const readStatement = this.isRead ? "has been read" : "not read yet";
@@ -162,16 +180,9 @@ book.prototype.generateCard = function () {
     card.appendChild(header);
     card.appendChild(author);
     card.appendChild(pages);
-    document.body.appendChild(card);
+    wrapper.appendChild(card);
 }
 
-const form = document.querySelector('#new-book');
-const btnNewBook = document.querySelector('#form-toggle');
-btnNewBook.addEventListener('click', clickBtnNew);
-const btnCloseForm = document.querySelector('#new-book .button-close');
-btnCloseForm.addEventListener('click', clickBtnNew);
-
-btnNewBook.status = "open";
 
 function clickBtnNew() {
     if (form.classList.contains("hidden")) {
@@ -193,17 +204,16 @@ function formSubmit (e) {
     const pages = document.querySelector("#form-pages");
     const isRead = document.querySelector("#form-is-read");
 
-    console.log(title.value);
-    console.log(author.value);
-    console.log(pages.value);
-    console.log(isRead.value);
     const newBook = new book (title.value, author.value, pages.value, isRead.checked);
     newBook.generateCard();
     clickBtnNew();
 }
 
-// const lordoftherings = new book ("The Lord Of The Rings", "J.R.R. Tolkein", "495", false);
-// const hamlet = new book("Hamlet", "William Shakespeare", "173", false);
+function sample() {
+    const lordoftherings = new book ("The Lord Of The Rings", "J.R.R. Tolkein", "495", false);
+    const hamlet = new book("Hamlet", "William Shakespeare", "173", false);
+}
+
 
 myLibrary.load();
 myLibrary.display();
