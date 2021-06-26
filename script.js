@@ -1,10 +1,20 @@
 'use strict'
 
+/* To-do
+* - Local storage option, then allow form submit to reset and use displayLibrary()
+* - Update footer links
+* - Validate form input
+*
+*/
+
+let arrLibrary = [];
+
 function book(title, author, pages, read) {
     this.title = title;
     this.author = author;
     this.pages = pages;
     this.isRead = read;
+    arrLibrary.push(this);
 }
 book.prototype.clickButton = function (e) {
     /* In this function:
@@ -33,6 +43,9 @@ book.prototype.generateCard = function () {
     //Creating the card div
     this.card = document.createElement('div');
     this.card.classList = "book";
+    if (this.isRead) {
+        this.card.classList.add("read");
+    }
     this.card.book = this;
 
     //Creating the contents
@@ -77,10 +90,11 @@ book.prototype.generateCard = function () {
 }
 
 const form = document.querySelector('#new-book');
-
-
 const btnNewBook = document.querySelector('#form-toggle');
 btnNewBook.addEventListener('click', clickBtnNew);
+const btnCloseForm = document.querySelector('#new-book .button-close');
+btnCloseForm.addEventListener('click', clickBtnNew);
+
 btnNewBook.status = "open";
 
 function clickBtnNew() {
@@ -88,14 +102,40 @@ function clickBtnNew() {
         form.classList.remove('hidden');
         btnNewBook.classList.remove('open');
         btnNewBook.classList.add('close');
+        btnNewBook.textContent = "x";
     } else {
         form.classList.add('hidden');
         btnNewBook.classList.add('open');
         btnNewBook.classList.remove('close');
+        btnNewBook.textContent = "+";
     }
+}
+
+function formSubmit (e) {
+    const title = document.querySelector("#form-title");
+    const author = document.querySelector("#form-author");
+    const pages = document.querySelector("#form-pages");
+    const isRead = document.querySelector("#form-is-read");
+
+    console.log(title.value);
+    console.log(author.value);
+    console.log(pages.value);
+    console.log(isRead.value);
+    const newBook = new book (title.value, author.value, pages.value, isRead.checked);
+    newBook.generateCard();
 }
 
 const lordoftherings = new book ("The Lord Of The Rings", "J.R.R. Tolkein", "495", false);
 const hamlet = new book("Hamlet", "William Shakespeare", "173", false);
-hamlet.generateCard();
-lordoftherings.generateCard();
+
+function displayLibrary () {
+    arrLibrary.sort(function sort(a,b) {
+        if (a.title < b.title) {return -1;
+    } else {return 1;}
+    })
+    
+
+    arrLibrary.forEach(function a(a) {a.generateCard()});
+}
+
+displayLibrary();

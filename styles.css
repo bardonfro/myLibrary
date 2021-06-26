@@ -1,5 +1,4 @@
-/* Color palette: https://coolors.co/04151f-0b2127-112e2f-183a37-efd6ac-786f52-9a999a-bbc2e2
-https://coolors.co/1c1d21-a288a6-bb9bb0-d6bfca-f1e3e4-46b1c9-84c0c6
+/* Color palette: https://coolors.co/1c1d21-a288a6-bb9bb0-d6bfca-f1e3e4-46b1c9-84c0c6
 */
 
 body {
@@ -7,6 +6,19 @@ body {
     min-width: 300px;
     background-color:  #1C1D21;
     color:#F1E3E4;
+}
+
+.button-close {
+    float:right;
+    width:1.3em;
+    height:1.3em;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-sizing: border-box;
+    line-height: 0em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #header {
