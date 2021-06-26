@@ -7,14 +7,64 @@
 *
 */
 
-let arrLibrary = [];
+let myLibrary = {
+    shelf: [],
+
+    addBook: function (book) {
+        this.shelf.push(book);
+        this.sort();
+        this.save();
+        return this.shelf;
+    },
+
+    removeBook: function (obj) {
+        this.shelf = this.shelf.filter(bk => !(bk === obj));
+        this.save();
+        return this.shelf;
+    },
+
+    display: function () {
+        this.shelf.forEach(function (bk) {
+            bk.generateCard();
+        });
+    },
+
+    load: function () {
+        if (localStorage.libraryShelf) {
+            const input = JSON.parse(localStorage.libraryShelf);
+            input.forEach(function (bk) {
+                const newbook = new book (bk.title, bk.author, bk.pages, bk.isRead);
+            })
+        } else {
+            console.log("No saved library.");
+        }
+        return this.shelf;
+    },
+
+    save: function () {
+        const output = JSON.stringify(this.shelf);
+        localStorage.libraryShelf = output;
+        return output;
+    },
+    
+    sort: function () {
+        this.shelf.sort(function (a,b) {
+            if (a.title < b.title) {
+                return true;
+            } else {return false;}
+        })
+        return this.shelf;
+    },
+    
+
+}
 
 function book(title, author, pages, read) {
     this.title = title;
     this.author = author;
     this.pages = pages;
     this.isRead = read;
-    arrLibrary.push(this);
+    myLibrary.addBook(this);
 }
 
 book.prototype.clickDel = function () {
@@ -22,7 +72,7 @@ book.prototype.clickDel = function () {
     const book = card.book;
     const confMessage = `Are you sure you want to delete ${book.title} from your library?`
 
-    arrLibrary = arrLibrary.filter(bk => !(bk === book));
+    myLibrary.removeBook(book);
     document.body.removeChild(card);
 
 }
@@ -152,17 +202,8 @@ function formSubmit (e) {
     clickBtnNew();
 }
 
-const lordoftherings = new book ("The Lord Of The Rings", "J.R.R. Tolkein", "495", false);
-const hamlet = new book("Hamlet", "William Shakespeare", "173", false);
+// const lordoftherings = new book ("The Lord Of The Rings", "J.R.R. Tolkein", "495", false);
+// const hamlet = new book("Hamlet", "William Shakespeare", "173", false);
 
-function displayLibrary () {
-    arrLibrary.sort(function sort(a,b) {
-        if (a.title < b.title) {return -1;
-    } else {return 1;}
-    })
-    
-
-    arrLibrary.forEach(function a(a) {a.generateCard()});
-}
-
-displayLibrary();
+myLibrary.load();
+myLibrary.display();
