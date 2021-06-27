@@ -173,6 +173,11 @@ div.book .author .by {
     margin: .8em;
 }
 
+#new-book .button {
+    display:block;
+    margin:auto;
+}
+
 /*  Footer  */
 
 #footer {
