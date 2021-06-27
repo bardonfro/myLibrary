@@ -4,12 +4,15 @@
 * - Validate form input
 */
 
+// Defining the DOM elements needed
 const wrapper = document.querySelector('#wrapper');
 const form = document.querySelector('#new-book');
 const btnNewBook = document.querySelector('#form-toggle');
 btnNewBook.addEventListener('click', clickBtnNew);
 const btnCloseForm = document.querySelector('#new-book .button-close');
 btnCloseForm.addEventListener('click', clickBtnNew);
+const emptyPrompt = document.querySelector('#empty-prompt');
+
 
 btnNewBook.status = "open";
 
@@ -20,7 +23,6 @@ let myLibrary = {
     addBook: function (book) {
         this.shelf.push(book);
         this.sort();
-        this.save();
         return this.shelf;
     },
 
@@ -35,7 +37,6 @@ let myLibrary = {
             bk.generateCard();
         });
 
-        const emptyPrompt = document.querySelector('#empty-prompt');
         if (this.shelf.length > 0) {
             emptyPrompt.classList.add('hidden');
         } else {
@@ -80,6 +81,7 @@ function book(title, author, pages, read) {
     this.pages = pages;
     this.isRead = read;
     myLibrary.addBook(this);
+    myLibrary.save();
 }
 
 book.prototype.clickDel = function () {
@@ -94,18 +96,11 @@ book.prototype.clickDel = function () {
 
 }
 
-book.prototype.clickRead = function (e) {
-    /* In this function:
-    *   - e = click event
-    *   - this = button
-    *   - book is set below
-    */
-
+book.prototype.clickRead = function () {
     const card = this.parentElement.parentElement
     const book = card.book;
-    const confMessage = `Are you sure you want to remove ${book.title} from your "have read" list?`
 
-    if (book.isRead /*&& confirm(confMessage)*/) {
+    if (book.isRead) {
         book.isRead = false;
         card.classList.remove("read");
     } else {
@@ -114,11 +109,7 @@ book.prototype.clickRead = function (e) {
     }
     myLibrary.save();
 }
-book.prototype.info = function() {
-    const readStatement = this.isRead ? "has been read" : "not read yet";
-    const info = `${title} by ${author}, ${pages} pages, ${readStatement}`
-    return info;
-}
+
 book.prototype.generateCard = function () {
     //Creating the card div
     const card = document.createElement('div');
@@ -126,15 +117,18 @@ book.prototype.generateCard = function () {
     if (this.isRead) {
         card.classList.add("read");
     }
-    card.book = this;
+    wrapper.appendChild(card);
 
-    //Creating the contents
+    card.book = this; // So the card and the book object are associated
+
+    //Creating the contents of the card
     const header = document.createElement('div');
         header.classList = "header"
         const title = document.createElement('div');
             title.classList = "title"
             title.textContent = this.title;
-            header.appendChild(title);
+        header.appendChild(title);
+        
         const btnDel = document.createElement('div');
             btnDel.classList = "button del-button";
                 const x = document.createElement('div');
@@ -146,7 +140,7 @@ book.prototype.generateCard = function () {
                     delLabel.textContent = "Del";
                     btnDel.appendChild(delLabel);
             btnDel.addEventListener('click', this.clickDel);
-            header.appendChild(btnDel);
+        header.appendChild(btnDel);
      
 
         const btnRead = document.createElement('div');
@@ -160,7 +154,8 @@ book.prototype.generateCard = function () {
                     readLabel.textContent = "Read";
                     btnRead.appendChild(readLabel);
             btnRead.addEventListener('click', this.clickRead);
-            header.appendChild(btnRead);
+        header.appendChild(btnRead);
+    card.appendChild(header);
 
     const author = document.createElement('div');
         author.classList = "author";
@@ -172,18 +167,16 @@ book.prototype.generateCard = function () {
         name.classList = "name";
         name.textContent = this.author;
         author.appendChild(name);
-        //author.textContent = "por " + this.author;
+    card.appendChild(author);
+
     const pages = document.createElement('div');
         pages.classList = "pages";
         pages.textContent = this.pages + " pg.";
-    //Filling the card and placing it in the DOM
-    card.appendChild(header);
-    card.appendChild(author);
     card.appendChild(pages);
-    wrapper.appendChild(card);
 }
 
 
+//Function that opens and closes the form to add a new book
 function clickBtnNew() {
     if (form.classList.contains("hidden")) {
         form.classList.remove('hidden');
@@ -206,12 +199,7 @@ function formSubmit (e) {
 
     const newBook = new book (title.value, author.value, pages.value, isRead.checked);
     newBook.generateCard();
-    clickBtnNew();
-}
-
-function sample() {
-    const lordoftherings = new book ("The Lord Of The Rings", "J.R.R. Tolkein", "495", false);
-    const hamlet = new book("Hamlet", "William Shakespeare", "173", false);
+    clickBtnNew(); // To close the form
 }
 
 
