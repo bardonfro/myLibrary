@@ -8,18 +8,7 @@ body {
     color:#F1E3E4;
 }
 
-.button-close {
-    float:right;
-    width:1.3em;
-    height:1.3em;
-    border-radius: 50%;
-    border: 3px solid white;
-    box-sizing: border-box;
-    line-height: 0em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+
 
 #header {
     text-align: center;
@@ -123,8 +112,8 @@ div.book .author .by {
     padding: 2em;
     text-align: center;
 }
-/* Form */
 
+/* Form */
 #form-toggle {
     height: 1.5em;
     width: 1.5em;
@@ -176,6 +165,19 @@ div.book .author .by {
 #new-book .button {
     display:block;
     margin:auto;
+}
+
+.button-close {
+    float:right;
+    width:1.3em;
+    height:1.3em;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-sizing: border-box;
+    line-height: 0em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /*  Footer  */
