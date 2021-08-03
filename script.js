@@ -49,7 +49,7 @@ let myLibrary = {
             this.shelf = [];
             const input = JSON.parse(localStorage.libraryShelf);
             input.forEach(function (bk) {
-                const newbook = new book (bk.title, bk.author, bk.pages, bk.isRead);
+                const newbook = new Book (bk.title, bk.author, bk.pages, bk.isRead);
             })
         } else {
             console.log("No saved library.");
@@ -75,106 +75,108 @@ let myLibrary = {
 
 }
 
-function book(title, author, pages, read) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.isRead = read;
-    myLibrary.addBook(this);
-    myLibrary.save();
-}
+class Book {
 
-book.prototype.clickDel = function () {
-    const card = this.parentElement.parentElement
-    const book = card.book;
-    const confMessage = `Are you sure you want to delete ${book.title} from your library?`
-
-    if(confirm(confMessage)) {
-        myLibrary.removeBook(book);
-        wrapper.removeChild(card);
+    constructor(title, author, pages, read) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.isRead = read;
+        myLibrary.addBook(this);
+        myLibrary.save();
     }
 
-}
+    clickDel() {
+        const card = this.parentElement.parentElement
+        const book = card.book;
+        const confMessage = `Are you sure you want to delete ${book.title} from your library?`
 
-book.prototype.clickRead = function () {
-    const card = this.parentElement.parentElement
-    const book = card.book;
+        if(confirm(confMessage)) {
+            myLibrary.removeBook(book);
+            wrapper.removeChild(card);
+        }
 
-    if (book.isRead) {
-        book.isRead = false;
-        card.classList.remove("read");
-    } else {
-        book.isRead = true;
-        card.classList.add("read");
     }
-    myLibrary.save();
-}
 
-book.prototype.generateCard = function () {
-    //Creating the card div
-    const card = document.createElement('div');
-    card.classList = "book";
-    if (this.isRead) {
-        card.classList.add("read");
+    clickRead() {
+        const card = this.parentElement.parentElement
+        const book = card.book;
+
+        if (book.isRead) {
+            book.isRead = false;
+            card.classList.remove("read");
+        } else {
+            book.isRead = true;
+            card.classList.add("read");
+        }
+        myLibrary.save();
     }
-    wrapper.appendChild(card);
 
-    card.book = this; // So the card and the book object are associated
+    generateCard() {
+        //Creating the card div
+        const card = document.createElement('div');
+        card.classList = "book";
+        if (this.isRead) {
+            card.classList.add("read");
+        }
+        wrapper.appendChild(card);
 
-    //Creating the contents of the card
-    const header = document.createElement('div');
-        header.classList = "header"
-        const title = document.createElement('div');
-            title.classList = "title"
-            title.textContent = this.title;
-        header.appendChild(title);
+        card.book = this; // So the card and the book object are associated
+
+        //Creating the contents of the card
+        const header = document.createElement('div');
+            header.classList = "header"
+            const title = document.createElement('div');
+                title.classList = "title"
+                title.textContent = this.title;
+            header.appendChild(title);
+            
+            const btnDel = document.createElement('div');
+                btnDel.classList = "button del-button";
+                    const x = document.createElement('div');
+                        x.classList = "symbol";
+                        x.textContent = "X";
+                        btnDel.appendChild(x);
+                    const delLabel = document.createElement('div');
+                        delLabel.classList = "label";
+                        delLabel.textContent = "Del";
+                        btnDel.appendChild(delLabel);
+                btnDel.addEventListener('click', this.clickDel);
+            header.appendChild(btnDel);
         
-        const btnDel = document.createElement('div');
-            btnDel.classList = "button del-button";
-                const x = document.createElement('div');
-                    x.classList = "symbol";
-                    x.textContent = "X";
-                    btnDel.appendChild(x);
-                const delLabel = document.createElement('div');
-                    delLabel.classList = "label";
-                    delLabel.textContent = "Del";
-                    btnDel.appendChild(delLabel);
-            btnDel.addEventListener('click', this.clickDel);
-        header.appendChild(btnDel);
-     
 
-        const btnRead = document.createElement('div');
-            btnRead.classList = "button read-button";
-                const check = document.createElement('div');
-                    check.classList = "symbol";
-                    check.textContent = "\u2713";
-                    btnRead.appendChild(check);
-                const readLabel = document.createElement('div');
-                    readLabel.classList = "label";
-                    readLabel.textContent = "Read";
-                    btnRead.appendChild(readLabel);
-            btnRead.addEventListener('click', this.clickRead);
-        header.appendChild(btnRead);
-    card.appendChild(header);
+            const btnRead = document.createElement('div');
+                btnRead.classList = "button read-button";
+                    const check = document.createElement('div');
+                        check.classList = "symbol";
+                        check.textContent = "\u2713";
+                        btnRead.appendChild(check);
+                    const readLabel = document.createElement('div');
+                        readLabel.classList = "label";
+                        readLabel.textContent = "Read";
+                        btnRead.appendChild(readLabel);
+                btnRead.addEventListener('click', this.clickRead);
+            header.appendChild(btnRead);
+        card.appendChild(header);
 
-    const author = document.createElement('div');
-        author.classList = "author";
-        const by = document.createElement('span');
-        by.classList = "by";
-        by.textContent = "by ";
-        author.appendChild(by);
-        const name = document.createElement('span');
-        name.classList = "name";
-        name.textContent = this.author;
-        author.appendChild(name);
-    card.appendChild(author);
+        const author = document.createElement('div');
+            author.classList = "author";
+            const by = document.createElement('span');
+            by.classList = "by";
+            by.textContent = "by ";
+            author.appendChild(by);
+            const name = document.createElement('span');
+            name.classList = "name";
+            name.textContent = this.author;
+            author.appendChild(name);
+        card.appendChild(author);
 
-    const pages = document.createElement('div');
-        pages.classList = "pages";
-        pages.textContent = this.pages + " pg.";
-    card.appendChild(pages);
+        const pages = document.createElement('div');
+            pages.classList = "pages";
+            pages.textContent = this.pages + " pg.";
+        card.appendChild(pages);
+    }
 }
-
 
 //Function that opens and closes the form to add a new book
 function clickBtnNew() {
@@ -197,7 +199,7 @@ function formSubmit (e) {
     const pages = document.querySelector("#form-pages");
     const isRead = document.querySelector("#form-is-read");
 
-    const newBook = new book (title.value, author.value, pages.value, isRead.checked);
+    const newBook = new Book(title.value, author.value, pages.value, isRead.checked);
     newBook.generateCard();
     clickBtnNew(); // To close the form
 }
